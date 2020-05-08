@@ -30,6 +30,23 @@
 // new createFrz();
 
 // 打包字体
-import './index.scss';
-var root = document.getElementById('root');
-root.innerHTML = '<div class="iconfont iconbad"></div>';
+// import './index.scss';
+// var root = document.getElementById('root');
+// root.innerHTML = '<div class="iconfont iconbad"></div>';
+
+
+// sourceMap
+// 是一个映射关系, 映射dist目录下main.js和源文件index.js中相同内容所在位置(代码在多少行)的映射
+// console.log('hello zhm###');
+
+import './style.css';
+
+var btn = document.createElement('button');
+btn.innerHTML = '新增';
+document.body.appendChild(btn);
+
+btn.onclick = function() {
+	var div = document.createElement('div');
+	div.innerHTML = 'item';
+	document.body.appendChild(div);
+}
