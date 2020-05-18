@@ -39,14 +39,24 @@
 // 是一个映射关系, 映射dist目录下main.js和源文件index.js中相同内容所在位置(代码在多少行)的映射
 // console.log('hello zhm###');
 
-import './style.css';
+// import './style.css';
 
-var btn = document.createElement('button');
-btn.innerHTML = '新增';
-document.body.appendChild(btn);
+// var btn = document.createElement('button');
+// btn.innerHTML = '新增';
+// document.body.appendChild(btn);
 
-btn.onclick = function() {
-	var div = document.createElement('div');
-	div.innerHTML = 'item';
-	document.body.appendChild(div);
-}
+// btn.onclick = function() {
+// 	var div = document.createElement('div');
+// 	div.innerHTML = 'item';
+// 	document.body.appendChild(div);
+// }
+
+
+const arr = [
+	new Promise(() => {}),
+	new Promise(() => {}),
+];
+
+arr.map(item => {
+	console.log(item);
+});
