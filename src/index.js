@@ -1,3 +1,4 @@
+// import "@babel/polyfill";
 // ES Module 模块引入方式-浏览器不识别
 // CommonJS 模块引入规范
 // var Header  = require('./header.js');

@@ -41,6 +41,7 @@ module.exports = {
 	},
 
 	// 启动服务器运行模式，如：http://localhost:8080/
+	// 启用devServer后打包的文件会放在内存里
 	devServer: {
 		// 服务器的位置
 		contentBase: './dist',
@@ -56,6 +57,43 @@ module.exports = {
 	// webpack 不能识别非 .js 结尾的模块，需要通过 loader 识别
 	module: {
 		rules: [
+		{
+			// Polyfill 是一块代码（通常是 Web 上的 JavaScript），用来为旧浏览器提供它没有原生支持的较新的功能。
+			// 在所有代码的最开头引入
+
+
+			// 将 ES6 的语法翻译成 ES5 语法, 适配更低端的浏览器
+			test: /\.js$/, // 匹配 .js 文件
+			// exclude 表示需要排除的文件，即不转译的文件
+			// 此处表示不转译 node_modules 依赖的文件(没必要)
+			// 也可以加快打包速度，提高打包性能
+			exclude: /node_modules/, 
+			// 使用 babel-loader
+			loader: 'babel-loader',
+			// options: {
+			// 	// 适用于写业务的代码
+  	// 			// presets: [['@babel/preset-env', {
+  	// 			// 	// 限制什么情况下需要转译ES6 成 ES5
+			//    //       targets: {
+			//    //       // 当谷歌浏览器版本大于67时，不需要转译
+			//    //        chrome: '67',
+			//    //      },
+			//    //      // 限制只转译使用的方法，可以减小打包文件的体积
+  	// 			// 	useBuiltIns: 'usage'
+  	// 			// }]],
+
+
+  	// 			// 适用于写类库代码
+  	// 			// plugins: [["@babel/plugin-transform-runtime", {
+  	// 			// 	"absoluteRuntime": false,
+			//    //      "corejs": 2,
+			//    //      "helpers": true,
+			//    //      "regenerator": true,
+			//    //      "useESModules": false,
+			//    //      "version": "7.0.0-beta.0"
+  	// 			// }]]
+			// },
+		},
 		{
 			test: /\.(css|scss)$/, // 匹配文件格式
 			// css-loader 分析多个 css 文件的关系, 并把多个文件的 css 合并成一段 css
@@ -80,24 +118,24 @@ module.exports = {
 			'postcss-loader', 
 			],
 		},
-		// {
-		// 	test: /\.(jpg|png|gif)$/, // 匹配文件格式
-		// 	use: {
-		// 		// url-loader 是 webpack的loader, 也可以打包 图片
-		// 		// 适合打包小的图片
-		// 		loader: 'url-loader', 
-		// 		options: {
-		// 			// placeholder 占位符
-		// 			name: '[name]_[hash].[ext]',
-		// 			// 将图片打包到 dist/image/ 目录下
-		// 			outputPath: 'image/',
-		// 			// 限制图片的大小，单位字节，
-		// 			// 当图片小于限制字节时，图片会被打包到bundle.js
-		// 			// 当图片大于限制字节时，图片会被打包到指定路径
-		// 			limit: 204800,
-		// 		},
-		// 	}
-		// },
+		{
+			test: /\.(jpg|png|gif)$/, // 匹配文件格式
+			use: {
+				// url-loader 是 webpack的loader, 也可以打包 图片
+				// 适合打包小的图片
+				loader: 'url-loader', 
+				options: {
+					// placeholder 占位符
+					name: '[name]_[hash].[ext]',
+					// 将图片打包到 dist/image/ 目录下
+					outputPath: 'image/',
+					// 限制图片的大小，单位字节，
+					// 当图片小于限制字节时，图片会被打包到bundle.js
+					// 当图片大于限制字节时，图片会被打包到指定路径
+					limit: 204800,
+				},
+			}
+		},
 		{
 			test: /\.(eot|ttf|svg|woff)$/, // 匹配文件格式, 打包字体
 			use: {
