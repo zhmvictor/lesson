@@ -25,7 +25,53 @@ if(module.hot) {
 }
 ```
 
+
 ### .babelrc 文件
 
 用于配置 babel 的配置项 options
+
+
+### Development 和 Production 模式的区别
+
+为了便于开发和发布，将开发版本和生产版本的webpack配置文件分开配置。
+为了避免多个配置文件间的配置冗余，提出一个具有公共配置的问价。
+webapck.dev.js: 开发版本配置文件
+webapck.prod.js: 发布版本配置文件
+webpack.common.js: 公共配置文件
+webpack-merge: 用于合并公共配置与开发（或发布）配置内容
+
+
+### Tree Shaking
+
+Tree Shaking 英文译为 “摇树”
+Tree Shaking 将 import 引入的模块进行打包，未引入的模块会去掉，可以减少打包体积
+Tree Shaking 只支持 ES Module, 因为ES Module 底层是静态引入方式，即 Tree Shaking 只支持静态引入方式
+Tree Shaking 更适用于生产环境，未使用的export不会被加进打包内容
+
+### Code Splitting 代码分割
+
+引导：
+第一种方式：
+首次访问页面，加载main.js(2mb)，打包文件很大，加载时间很长
+当页面业务逻辑发生变化时，又要重新加载2mb的内容
+
+第二种方式：
+mian.js 被拆成 main.js(1mb) 和 lodash.js(1mb)
+首次访问时页面，并行加载两个 1mb 的内容
+当业务逻辑发生变化时，只要加载 main.js(1mb) 即可，因为lodash.js 没有变化
+
+总结：
+1.代码分割可以提高代码性能
+2.代码分割本身是一种概念，与 webpack 无关，只不过 webpack 内置了代码分割功能
+3.同步代码，需要在 webpack 的 optimization 中配置splitChunks
+4.异步代码(import): 无需做任何配置，会自动代码分割
+
+
+### splitChunks --webpack自定义的代码分割配置
+
+- chunks: 对哪种引入的类型的代码做分割，initial(同步代码)/async(异步代码)/all(所有代码)，打包同步代码时需要与cacheGroups.vendors配合使用
+
+- minSize：代码分割的最小体积限制，即引入的模块超出minSize时，才做代码分割
+
+
 

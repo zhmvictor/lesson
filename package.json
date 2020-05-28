@@ -1,17 +1,23 @@
 {
   "name": "lesson",
+  "sideEffects": [
+    "*.css"
+  ],
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "bundle": "webpack",
     "watch": "webpack --watch",
-    "start": "webpack-dev-server --open"
+    "dev": "webpack-dev-server --config ./build/webpack.dev.js --open",
+    "build": "webpack --config ./build/webpack.prod.js",
+    "dev-build": "webpack --config ./build/webpack.dev.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.9.6",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
     "autoprefixer": "^9.7.6",
@@ -26,12 +32,14 @@
     "style-loader": "^1.2.1",
     "url-loader": "^4.1.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "@babel/polyfill": "^7.8.7",
     "@babel/runtime": "^7.9.6",
     "@babel/runtime-corejs2": "^7.9.6",
+    "lodash": "^4.17.15",
     "webpack": "^4.43.0"
   },
   "browserslist": [
