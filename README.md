@@ -37,7 +37,7 @@ if(module.hot) {
 
 为了便于开发和发布，将开发版本和生产版本的webpack配置文件分开配置。
 
-为了避免多个配置文件间的配置冗余，提出一个具有公共配置的问价。
+为了避免多个配置文件间的配置冗余，提出一个具有公共配置的文件。
 
 - webapck.dev.js: 开发版本配置文件
 - webapck.prod.js: 发布版本配置文件
@@ -49,7 +49,7 @@ if(module.hot) {
 
 - Tree Shaking 英文译为 “摇树”
 - Tree Shaking 将 import 引入的模块进行打包，未引入的模块会去掉，可以减少打包体积
-- Tree Shaking 只支持 ES Module, 因为ES Module 底层是静态引入方式，即 Tree - - - Shaking 只支持静态引入方式
+- Tree Shaking 只支持 ES Module, 因为ES Module 底层是静态引入方式，即 Tree Shaking 只支持静态引入方式
 - Tree Shaking 更适用于生产环境，未使用的export不会被加进打包内容
 
 ### Code Splitting 代码分割
@@ -67,7 +67,7 @@ mian.js 被拆成 main.js(1mb) 和 lodash.js(1mb)，
 首次访问时页面，并行加载两个 1mb 的内容。
 当业务逻辑发生变化时，只要加载 main.js(1mb) 即可，因为lodash.js 没有变化
 
-总结：
+> 总结
 
 1.代码分割可以提高代码性能
 
