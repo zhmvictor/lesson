@@ -8,7 +8,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 // 现在webpack已经内置了自动清除功能, 似乎只会清除上一次打包的.js文件，并没有将整个dist文件夹删掉，此处原理存疑，待后续研究
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = {
+const webpack = require('webpack');
+
+const merge = require('webpack-merge');
+const devConfig = require('./webpack.dev.js');
+const prodConfig = require('./webpack.prod.js');
+
+const commonConfig = {
   // 入口文件，开始打包的文件
   // 简写形式  entry: './src/index.js',
   entry: {
@@ -33,7 +39,12 @@ module.exports = {
         // 也可以加快打包速度，提高打包性能
         exclude: /node_modules/,
         // 使用 babel-loader
-        loader: 'babel-loader',
+        use: [{
+          loader: 'babel-loader',
+        }, {
+          loader: 'imports-loader?this=>window',
+        }],
+        
         // options: {
         // 	// 适用于写业务的代码
         // 			// presets: [['@babel/preset-env', {
@@ -56,30 +67,6 @@ module.exports = {
         //    //      "version": "7.0.0-beta.0"
         // 			// }]]
         // },
-      },
-      {
-        test: /\.(css|scss)$/, // 匹配文件格式
-        // css-loader 分析多个 css 文件的关系, 并把多个文件的 css 合并成一段 css
-        // style-loader 把分析出的 css 内容挂载到页面上
-        // 打包 js 文件中引入的 css/scss, 各种 loader 按从下到上的顺序执行
-        use: [
-          // 用于打包 .css 文件
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              // 当css/scss文件引入其他css/scss时使用
-              // 表示应用 css-loader 前应用的 loader 的数量
-              importLoaders: 2,
-              // 开启 css 模块化打包, 使样式只生效于当前模块
-              // modules: true,
-            },
-          },
-          // 用于打包 .scss 文件
-          'sass-loader',
-          // 样式自动增加厂商前缀
-          'postcss-loader',
-        ],
       },
       {
         test: /\.(jpg|png|gif)$/, // 匹配文件格式
@@ -123,30 +110,18 @@ module.exports = {
       cleanAfterEveryBuildPatterns: ['dist'],
       root: path.resolve(__dirname, '../'),
     }),
+
+    // 垫片
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      _join: ['lodash', 'join'],
+    }),
   ],
 
   optimization: {
     // webpack 自带的代码分割功能
     splitChunks: {
-      chunks: 'all',
-      minSize: 30000,
-      minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
-      name: true,
-      cacheGroups: {
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-					priority: -10,
-					filename: 'vendors.js',
-        },
-				default: {
-					priority: -20,
-          reuseExistingChunk: true,
-          filename: 'common.js',
-			  },
-      },
+      chunks: 'all', // 其他参数不配置则会用 webpack 的默认配置
     },
   },
 
@@ -158,11 +133,25 @@ module.exports = {
 
     // 打包出的文件名
     // [name]是占位符, 对应entry里的键名, 可用于打包多个文件
+    // 直接引用的文件的出口
     filename: '[name].js',
+    // 间接引用的文件的出口
+    chunkFilename: '[name].chunk.js',
 
     // 打包出的文件路径，绝对路径。
     // __dirname 是 webpack.config.js 所在的当前路径
     // 第二个参数是 打包文件所在的文件夹名
     path: path.resolve(__dirname, '../dist'),
   },
+};
+
+/**
+ * @param env 全局变量 
+ */
+module.exports = (env) => {
+  if(env && env.production) {
+    return merge(commonConfig, prodConfig);
+  } else {
+    return merge(commonConfig, devConfig);
+  }
 };

@@ -97,3 +97,40 @@ mian.js 被拆成 main.js(1mb) 和 lodash.js(1mb)，
 - priority: 打包匹配优先级，值越大优先级越高
 
 - reuseExistingChunk: 复用之前已经被打包过的模块，不会再次打包
+
+
+### chunk 是什么？
+
+每一个打包的.js文件都是一个 chunk
+
+
+### 打包分析
+
+Prefetching/Preloading
+
+
+### CSS 文件的代码分割
+
+mini-css-extract-plugin: 分割 css 代码
+
+optimize-css-assets-webpack-plugin: css 代码合并与压缩
+
+
+### webpack与浏览器缓存
+
+处理浏览器缓存问题，加上 hash 值，每次打包后文件名不同，浏览器就会重新请求， 例：
+```
+output: {
+	filename: '[name].[contenthash].js',
+	chunkFilename: '[name].[contenthash].js',
+}
+```
+
+### Shimming 
+
+垫片？？？
+
+
+### 环境变量
+
+env
