@@ -1,24 +1,15 @@
-// import _ from 'lodash';
+import React, { Component } from 'react';
+import ReactDom from 'react-dom';
+import _ from 'lodash';
 
-// let element = document.createElement('div');
-// element.innerHTML = _.join(['a', 'b'], '***');
-// document.body.appendChild(element);
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <div>{_.join(['This', 'is', 'App'], ' ')}</div>
+      </div>
+    );
+  }
+}
 
-
-// async function getComponent() {
-//   // webpackChunkName 魔法注释
-//   const { default: _ } = await import(/* webpackChunkName: "lodash" */'lodash');
-//   const element = document.createElement('div');
-//   element.innerHTML = _.join(['a', 'b'], '***');
-//   return element;
-// }
-
-// document.addEventListener('click', () => {
-//   getComponent().then(element => {
-//     document.body.appendChild(element);
-//   })
-// })
-
-console.log(this === window);
-
-
+ReactDom.render(<App />, document.getElementById('root'));
