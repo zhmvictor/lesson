@@ -5,38 +5,50 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const AddAssetHtmlWebpackPlugin = require('add-asset-html-webpack-plugin');
 
-const plugins = [
-	new HtmlWebpackPlugin({
-		template: 'src/index.html',
-	}), 
-	new CleanWebpackPlugin(['dist'], {
-		root: path.resolve(__dirname, '../'),
-	}),
-];
+const makePlugins = (configs) => {
+	const plugins = [
+		new CleanWebpackPlugin(['dist'], {
+			root: path.resolve(__dirname, '../'),
+		}),
+	];
 
-// node 语法，读取文件
-const files = fs.readdirSync(path.resolve(__dirname, '../dll'));
-files.forEach(file => {
-	if(/.*\.dll.js/.test(file)) {
+	// 多页面打包配置
+	Object.keys(configs.entry).forEach(item => {
 		plugins.push(
-			new AddAssetHtmlWebpackPlugin({
-				filepath: path.resolve(__dirname, '../dll', file),
-			})
+			new HtmlWebpackPlugin({
+				template: 'src/index.html',
+				filename: `${item}.html`,
+				chunks: ['runtime', 'vendors', item],
+			}),
 		);
-	}
-	if(/.*\.manifest.json/.test(file)) {
-		plugins.push(
-			new webpack.DllReferencePlugin({
-				manifest: path.resolve(__dirname, '../dll', file),
-			})
-		);
-	}
-});
+	});
 
+	// node 语法，读取文件
+	const files = fs.readdirSync(path.resolve(__dirname, '../dll'));
+	files.forEach(file => {
+		if(/.*\.dll.js/.test(file)) {
+			plugins.push(
+				new AddAssetHtmlWebpackPlugin({
+					filepath: path.resolve(__dirname, '../dll', file),
+				})
+			);
+		}
+		if(/.*\.manifest.json/.test(file)) {
+			plugins.push(
+				new webpack.DllReferencePlugin({
+					manifest: path.resolve(__dirname, '../dll', file),
+				})
+			);
+		}
+	});
 
-module.exports = {
+	return plugins;
+};
+
+const configs = {
 	entry: {
 		main: './src/index.js',
+		list: './src/list.js',
 	},
 	resolve: {
 		extensions: ['.js', '.jsx'],
@@ -65,7 +77,6 @@ module.exports = {
 			} 
 		}]
 	},
-	plugins,
 	optimization: {
 		runtimeChunk: {
 			name: 'runtime'
@@ -86,4 +97,8 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, '../dist')
 	}
-}
+};
+
+configs.plugins = makePlugins(configs);
+
+module.exports = configs;
