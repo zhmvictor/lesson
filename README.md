@@ -145,4 +145,14 @@ env
 
 4. resolve 参数合理配置。
 
-	- 
+5. 使用 DllPlugin 提高打包速度。
+
+6. 控制包文件的大小。用不到的文件可以通过 Tree Shaking 等去掉。
+
+7. thread-loader、parallel-webpack、happypack 多进程打包。
+
+8. 合理使用 sourceMap。
+
+9. 结合 stats 分析打包结果。
+
+10. 开发环境内存编译。开发环境无用插件剔除 
