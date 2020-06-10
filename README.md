@@ -47,10 +47,38 @@ if(module.hot) {
 
 ### Tree Shaking
 
-- Tree Shaking 英文译为 “摇树”
-- Tree Shaking 将 import 引入的模块进行打包，未引入的模块会去掉，可以减少打包体积
+- Tree Shaking 英文可翻译为 “摇树”，每个模块可被看成一棵树，未被使用的代码会被从程序中剔除。
 - Tree Shaking 只支持 ES Module, 因为ES Module 底层是静态引入方式，即 Tree Shaking 只支持静态引入方式
-- Tree Shaking 更适用于生产环境，未使用的export不会被加进打包内容
+- development 环境下配置 Tree Shaking 时， 
+	-	webpack 配置文件中配置 `optimization.usedExports` 为 true，表示在使用 import 导入的这些依赖模块中，使用了 export 导出的模块将会被打包，未使用的则不会被打包。因此，如果有导入`.css/babel库`等文件，还需要在 package.json 中配置例如 `sideEffects: ["#.css", "@babel/polyfill"]`等，因为这些文件中虽然没有 export 出任何内容，但是程序运行时依然被使用，属于“有副作用”的代码，`sideEffects`即是“副作用”的意思。若没有任何副作用代码，`sideEffects`配置为 false 即可。
+	- development 模式下配置 Tree Shaking 不会真的将代码在打包文件中去除，这是为了防止开发的代码丢失。但是会标记出哪些文件在打包时没有被用到。
+- Tree Shaking 更适用于生产环境，即 production 模式。
+	- production 模式下，webpack 会自动执行 Tree Shaking，可以不用配置`optimization.usedExports`，但是`sideEffects`仍然需要配置，防止打包过程中丢失掉有副作用的代码。
+	- production 模式下，会将未被使用的代码真正从程序中剔除。
+- Tree Shaking 可以减少打包文件的体积，加快打包速度。
+
+> 其他知识点
+
+```
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "chrome": "67"
+        },
+        "useBuiltIns": "usage" // babel 的 useBuiltIns 属性可以在打包时自动将 babel 引入使用 babel 的文件，就不需要再手动引入了
+      }
+    ],
+    "@babel/preset-react"
+  ]
+}
+```
+
+> 疑问？？？
+
+既然 development 模式并没有真正将未使用的代码删除，那为什么还要在开发模式下使用 Tree Shaking ？
 
 ### Code Splitting 代码分割
 
