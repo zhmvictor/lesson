@@ -85,26 +85,22 @@ if(module.hot) {
 
 > 引导
 
-- 第一种方式：
+- 第一种方式：未使用代码分割
 
 首次访问页面，加载main.js(2mb)，打包文件很大，加载时间很长。
 当页面业务逻辑发生变化时，又要重新加载2mb的内容
 
-- 第二种方式：
+- 第二种方式：使用代码分割
 
 mian.js 被拆成 main.js(1mb) 和 lodash.js(1mb)，
 首次访问时页面，并行加载两个 1mb 的内容。
-当业务逻辑发生变化时，只要加载 main.js(1mb) 即可，因为lodash.js 没有变化
+当业务逻辑发生变化时，只要加载 main.js(1mb) 即可，因为lodash.js 没有变化，浏览器有缓存，提高了运行速度
 
-> 总结
+> webpack 代码分割
 
-1.代码分割可以提高代码性能
-
-2.代码分割本身是一种概念，与 webpack 无关，只不过 webpack 内置了代码分割功能
-
-3.同步代码，需要在 webpack 的 optimization 中配置splitChunks
-
-4.异步代码(import): 无需做任何配置，会自动代码分割
+两种方式：
+1. 同步代码：只需要在webpack.common.js的optimization中配置splitChunks即可
+2. 异步代码(import): 异步代码，无需做任何配置，会自动进行代码分割，放置到新的文件中
 
 
 ### splitChunks --webpack自定义的代码分割配置
@@ -126,6 +122,14 @@ mian.js 被拆成 main.js(1mb) 和 lodash.js(1mb)，
 - priority: 打包匹配优先级，值越大优先级越高
 
 - reuseExistingChunk: 复用之前已经被打包过的模块，不会再次打包
+
+
+> 总结
+
+1.代码分割可以提高代码性能（项目运行速度等）
+
+2.代码分割本身是一种概念，与 webpack 无关，只不过 webpack 内置了代码分割功能
+
 
 
 ### chunk 是什么？
