@@ -47,8 +47,9 @@ if(module.hot) {
 
 ### Tree Shaking
 
-- Tree Shaking 英文可翻译为 “摇树”，每个模块可被看成一棵树，未被使用的代码会被从程序中剔除。
+- Tree Shaking 英文可翻译为 “摇树”，每个模块可被看成一棵树。
 - Tree Shaking 只支持 ES Module, 因为ES Module 底层是静态引入方式，即 Tree Shaking 只支持静态引入方式
+- Tree Shaking 会在打包过程中，将 export 导出的模块中未被使用的代码、没有被模块 export 的代码删除。
 - development 环境下配置 Tree Shaking 时， 
 	-	webpack 配置文件中配置 `optimization.usedExports` 为 true，表示在使用 import 导入的这些依赖模块中，使用了 export 导出的模块将会被打包，未使用的则不会被打包。因此，如果有导入`.css/babel库`等文件，还需要在 package.json 中配置例如 `sideEffects: ["#.css", "@babel/polyfill"]`等，因为这些文件中虽然没有 export 出任何内容，但是程序运行时依然被使用，属于“有副作用”的代码，`sideEffects`即是“副作用”的意思。若没有任何副作用代码，`sideEffects`配置为 false 即可。
 	- development 模式下配置 Tree Shaking 不会真的将代码在打包文件中去除，因为开发环境需要调试，打包文件的代码如果和源文件代码不一致，会导致source-map不一致，影响开发调试。但是会标记出哪些文件在打包时没有被用到。
